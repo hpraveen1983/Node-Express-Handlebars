@@ -1,29 +1,30 @@
+var express = require("express");
 
-const express = require("express"); // Server
+var PORT = process.env.PORT || 3000;
 
-const exphbs = require("express-handlebars"); // Require Templating Engine Handlebars
+var app = express();
 
+// Serve static content for the app from the "public" directory in the application directory.
+//adding __dirname + to public is what allowed me access to the images in assets/img folder
+app.use(express.static(__dirname + "/public"));
 
-const app = express(); // Initalise Express Server
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
 
-let PORT = process.env.PORT || 8080; // Set Default Port for Express and Heroku
-app.use(express.urlencoded({ extended: false })); // Add Additional Functionality to Express Using Middleware body-parser
-app.use(express.static("public")); // Serve Static Content Such as CSS, JS, for the App from the "public" Directory in the Application Directory.
+// parse application/json
+app.use(express.json());
 
+// Set Handlebars.
+var exphbs = require("express-handlebars");
+//sets main.handlebars as the default layout and our view engine as handlebar
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+//import routes and give the server access to them
+var routes = require("./controllers/burgersController.js");
 
-// Import routes and give the server access to them.
-// require("./controllers/burgersController.js")(app);
+app.use(routes);
 
-// Equivalent???
-const routes = require("./controllers/burgers_controller.js");
-app.use("/", routes);
-
-
-/////////////////////////////////////////////// /* Start The Server */ //////////////////////////////////////////////////////////
-// Starts the server to begin listening
 app.listen(PORT, function() {
-  console.log("App listening on PORT " + PORT);
+  console.log("App now listening at localhost:" + PORT);
 });

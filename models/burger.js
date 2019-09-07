@@ -1,48 +1,29 @@
-const orm = require("../config/orm.js");
-
-
-
-/////////////////////////////////////////////// /*Model*/ //////////////////////////////////////////////////////////
-
-const burger = {
-
-  selectAll : (callback) => {
-
-    orm.selectAll("burgers", (results)=>{
-      callback(results);
+// Import the ORM to create functions that will interact with the database.
+var orm = require("../config/orm.js");
+//"burger" is the table name
+var burger = {
+  all: function(cb) {
+    orm.all("burgers", function(res) {
+      cb(res);
     });
-
   },
-
   // The variables cols and vals are arrays.
-  insertOne : (cols, vals, callback) => {
-
-    // Execute orm Function to Post Data into Database
-    orm.insertOne("burgers", cols, vals, (result)=>{
-      console.log("Executing Insert One Model");
-      callback(result);
+  create: function(cols, vals, cb) {
+    orm.create("burgers", cols, vals, function(res) {
+      cb(res);
     });
-
   },
-
-  updateOne : (cols, vals, condition, callback) =>{
-
-
-    console.log("Executing Update One Model");
-
-    orm.updateOne("burgers", cols, vals, condition, (result)=>{
-      console.log("Executing Second Declared CallBack");
-      callback(result);
+  update: function(objColVals, condition, cb) {
+    orm.update("burgers", objColVals, condition, function(res) {
+      cb(res);
     });
-
+  },
+  delete: function(condition, cb) {
+    orm.delete("burgers", condition, function(res) {
+      cb(res);
+    });
   }
+};
 
-
-
-
-}; // End of Burger Object
-
-
-
-/////////////////////////////////////////////// /*Exports*/ //////////////////////////////////////////////////////////
+// Export the database functions for the controller (catsController.js).
 module.exports = burger;
